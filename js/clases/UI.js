@@ -1,5 +1,6 @@
 import{formulario,tabla}from "../selectores.js"
 import { items } from "./Producto.js";
+import {BaseDatoArticulos} from "../funciones.js"
 
 export let iditemEliminar;
 export let iditemEditar;
@@ -25,57 +26,117 @@ class UI {
       formulario.appendChild(div)
     }
 
-    InyectarHtml(obj){
+    InyectarHtml(){
        this.LImpiarTabla()
-obj.forEach((ob)=>{
-const {articulo,stockMinimo,Saldo,unidadMedida,Bodega,Observacion,id}=ob
 
-const row=document.createElement("tr")
-row.innerHTML=`<td>${articulo}</td>
-<td>${stockMinimo}</td>
-<td>${Saldo}</td>
-<td>${unidadMedida}</td>
-<td>${Bodega}</td>
-<td>${Observacion}</td>
-`
+const ObjectStore=BaseDatoArticulos.transaction("Articulos").objectStore("Articulos")
 
-const BtnEditar=document.createElement("button")
-BtnEditar.classList.add("btn","mr-2","link-danger")
-BtnEditar.setAttribute("id",id)
-BtnEditar.innerHTML='Editar'
-row.appendChild(BtnEditar)
+ObjectStore.openCursor().onsuccess = function(e){
 
-BtnEditar.onclick=(e) =>{
+const cursor=e.target.result
+
+if(cursor){
+  const {articulo,stockMinimo,Saldo,unidadMedida,Bodega,Observacion,id}=cursor.value
+
+  const row=document.createElement("tr")
+  row.innerHTML=`<td>${articulo}</td>
+   <td>${stockMinimo}</td>
+  <td>${Saldo}</td>
+  <td>${unidadMedida}</td>
+  <td>${Bodega}</td>
+  <td>${Observacion}</td>
+  `
   
+  const BtnEditar=document.createElement("button")
+  BtnEditar.classList.add("btn","mr-2","link-danger")
+  BtnEditar.setAttribute("id",id)
+  BtnEditar.innerHTML='Editar'
+  row.appendChild(BtnEditar)
+  
+  const citaa=cursor.value
+  
+  BtnEditar.onclick=(e) =>{
+    
   iditemEditar=parseInt(e.target.getAttribute("id"))
-  //console.log("🚀 ~ file: UI.js ~ line 51 ~ UI ~ obj.forEach ~ iditemEditar", iditemEditar)
-
-  items.CargarModoEdicion(iditemEditar,items)
+  console.log("🚀 ~ file: UI.js ~ line 59 ~ UI ~ ObjectStore.openCursor ~ iditemEditar", iditemEditar)
+  
+  
+  items.CargarModoEdicion(iditemEditar,citaa)
+  
+  }
+  
+  const Btn=document.createElement("button")
+  Btn.classList.add("btn","mr-2","link-danger")
+  Btn.setAttribute("id",id)
+  Btn.innerHTML='Eliminar'
+  
+  row.appendChild(Btn)
+  
+    
+ Btn.onclick=(e) =>{
+    
+  iditemEliminar=parseInt(e.target.getAttribute("id"))
+  console.log("🚀 ~ file: UI.js ~ line 49 ~ UI ~ obj.forEach ~ iditemEliminar", iditemEliminar)
+  items.EliminarArticulos(iditemEliminar)
+  
+  }
+  
+tabla.appendChild(row)
+cursor.continue()
+}
 
 }
 
-const Btn=document.createElement("button")
-Btn.classList.add("btn","mr-2","link-danger")
-Btn.setAttribute("id",id)
-Btn.innerHTML='Eliminar'
+// obj.forEach((ob)=>{
+// const {articulo,stockMinimo,Saldo,unidadMedida,Bodega,Observacion,id}=ob
 
-row.appendChild(Btn)
+// const row=document.createElement("tr")
+// row.innerHTML=`<td>${articulo}</td>
+// <td>${stockMinimo}</td>
+// <td>${Saldo}</td>
+// <td>${unidadMedida}</td>
+// <td>${Bodega}</td>
+// <td>${Observacion}</td>
+// `
+
+// const BtnEditar=document.createElement("button")
+// BtnEditar.classList.add("btn","mr-2","link-danger")
+// BtnEditar.setAttribute("id",id)
+// BtnEditar.innerHTML='Editar'
+// row.appendChild(BtnEditar)
+
+// BtnEditar.onclick=(e) =>{
+  
+//   iditemEditar=parseInt(e.target.getAttribute("id"))
+
+
+//   items.CargarModoEdicion(iditemEditar,items)
+
+// }
+
+// const Btn=document.createElement("button")
+// Btn.classList.add("btn","mr-2","link-danger")
+// Btn.setAttribute("id",id)
+// Btn.innerHTML='Eliminar'
+
+// row.appendChild(Btn)
 
   
-Btn.onclick=(e) =>{
+// Btn.onclick=(e) =>{
   
-    iditemEliminar=parseInt(e.target.getAttribute("id"))
-    console.log("🚀 ~ file: UI.js ~ line 49 ~ UI ~ obj.forEach ~ iditemEliminar", iditemEliminar)
- items.EliminarArticulos(iditemEliminar)
+//     iditemEliminar=parseInt(e.target.getAttribute("id"))
+//     console.log("🚀 ~ file: UI.js ~ line 49 ~ UI ~ obj.forEach ~ iditemEliminar", iditemEliminar)
+//  items.EliminarArticulos(iditemEliminar)
 
-  }
+//   }
 
-tabla.appendChild(row)
+// tabla.appendChild(row)
 
 
 
-})
+// })
 
+//cierreeeeee
     }
 
     LImpiarTabla(){
