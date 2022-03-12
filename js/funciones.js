@@ -1,8 +1,11 @@
 import {items,editando} from "./clases/Producto.js"
-import {ui,iditemEditar} from "./clases/UI.js"
-import {form} from "../js/selectores.js"
+import {ui,iditemEditar,Productos} from "./clases/UI.js"
+import {form,tabla,articuloInput} from "../js/selectores.js"
+
+export const buscar= document.querySelector("#buscar")
 
 export let BaseDatoArticulos;
+
 
 
 export const ArticuloObj={
@@ -12,10 +15,115 @@ export const ArticuloObj={
     Saldo: "",
     unidadMedida:"",
     Bodega: "",
-    Observacion:""
+    categoria:""
 
 }
 
+export function CargarBuscador(){
+ 
+    const buscador=document.querySelector("#buscar");
+
+const transaction=BaseDatoArticulos.transaction(["Articulos"],"readonly");
+const ObjectStore=transaction.objectStore("Articulos")
+
+const Productos=ObjectStore.openCursor()
+
+Productos.onsuccess= function (e) {
+const cursor=e.target.result;
+
+if(cursor){
+
+  const {id,articulo}=cursor.value;
+
+const select=document.createElement("option")
+select.setAttribute("value",id);
+select.setAttribute("data-id",articulo);
+select.textContent=articulo;
+
+buscador.appendChild(select)
+
+cursor.continue()
+
+}
+}
+
+
+}
+
+export function FiltrarArticulos(e){
+e.preventDefault()
+  let textoBusqueda=buscar.options[buscar.selectedIndex].text 
+  
+  let Productos2=Productos.filter(producto=> producto.articulo===textoBusqueda)
+  console.log("🚀 ~ file: funciones.js ~ line 58 ~ FiltrarArticulos ~ Productos2", Productos2)
+
+  Productos2.forEach((item)=>{
+
+    const {articulo,stockMinimo,Saldo,unidadMedida,Bodega,categoria,id}=item
+  
+        tabla.innerHTML=""
+        const row=document.createElement("tr")
+
+    if(Saldo<=stockMinimo){
+  row.innerHTML=`<td>${articulo}</td>
+         <td>${stockMinimo}</td>
+        <td class="msjError"><strong>${Saldo}</strong></td>
+        <td>${unidadMedida}</td>
+        <td>${Bodega}</td>
+        <td>${categoria}</td>
+        `
+
+    }else{
+        row.innerHTML=`<td>${articulo}</td>
+        <td>${stockMinimo}</td>
+       <td class="msjBien"><strong>${Saldo}</strong></td>
+       <td>${unidadMedida}</td>
+       <td>${Bodega}</td>
+       <td>${categoria}</td>
+       `
+
+    }
+        const BtnEditar=document.createElement("button")
+        BtnEditar.classList.add("btn","mr-2","link-warning")
+        BtnEditar.setAttribute("id",id)
+        BtnEditar.innerHTML='Editar'
+        row.appendChild(BtnEditar)
+    
+        BtnEditar.onclick=(e) =>{
+          let iditemEditar2;
+        iditemEditar2=parseInt(e.target.getAttribute("id"))
+        console.log("🚀 ~ file: UI.js ~ line 59 ~ UI ~ ObjectStore.openCursor ~ iditemEditar", iditemEditar2)
+        
+        
+        items.CargarModoEdicion(iditemEditar2,Productos2)
+        
+        }
+        
+        const Btn=document.createElement("button")
+        Btn.classList.add("btn","mr-2","link-danger")
+        Btn.setAttribute("id",id)
+        Btn.innerHTML='Eliminar <i class="bi bi-file-earmark-x-fill"></i>'
+        
+        row.appendChild(Btn)
+        
+          
+       Btn.onclick=(e) =>{
+          
+        let iditemEliminar=parseInt(e.target.getAttribute("id"))
+        console.log("🚀 ~ file: UI.js ~ line 49 ~ UI ~ obj.forEach ~ iditemEliminar", iditemEliminar)
+        items.EliminarArticulos(iditemEliminar)
+        
+        }
+        
+      tabla.appendChild(row)
+      
+
+   
+
+
+  })
+
+}
 
 export function CrearBaseDeDatos(){
 
@@ -34,6 +142,7 @@ BaseDatos.onsuccess=(succes)=>{
     console.log("exito se ha creado la base de datos")
 
     BaseDatoArticulos=BaseDatos.result
+    
   
     ui.InyectarHtml()
     
@@ -50,19 +159,38 @@ BaseDatos.onupgradeneeded=(e)=>{
 
 //definir columnnas
 
-ObjectStore.createIndex("articulo","articulo",{unique:false})
+ObjectStore.createIndex("articulo","articulo",{unique:true})
 ObjectStore.createIndex("stockMinimo","stockMinimo",{unique:false})
 ObjectStore.createIndex("Saldo","Saldo",{unique:false})
 ObjectStore.createIndex("unidadMedida","unidadMedida",{unique:false})
 ObjectStore.createIndex("Bodega","Bodega",{unique:false})
-ObjectStore.createIndex("Observacion","Observacion",{unique:false})
-ObjectStore.createIndex("id","id",{unique:false})
+ObjectStore.createIndex("categoria","categoria",{unique:false})
+ObjectStore.createIndex("id","id",{unique:true})
 
 const ObjectStoreVentas = base.createObjectStore("ventas",{keyPath:"id",autoIncrement:true})
 
 ObjectStoreVentas.createIndex("articulo","articulo",{unique:false})
-}
+ObjectStoreVentas.createIndex("fecha","fecha",{unique:false})
+ObjectStoreVentas.createIndex("cantidad","cantidad",{unique:false})
+ObjectStoreVentas.createIndex("cliente","cliente",{unique:false})
+ObjectStoreVentas.createIndex("tipoDocumento","tipoDocumento",{unique:false})
+ObjectStoreVentas.createIndex("NumDocumento","NumDocumento",{unique:false})
+ObjectStoreVentas.createIndex("observacion","observacion",{unique:false})
+ObjectStoreVentas.createIndex("id","id",{unique:true})
+ObjectStoreVentas.createIndex("idArticulo","idArticulo",{unique:true})
 
+const ObjectStoreCompras = base.createObjectStore("compras",{keyPath:"id",autoIncrement:true})
+
+ObjectStoreCompras.createIndex("articulo","articulo",{unique:false})
+ObjectStoreCompras.createIndex("fecha","fecha",{unique:false})
+ObjectStoreCompras.createIndex("cantidad","cantidad",{unique:false})
+ObjectStoreCompras.createIndex("proveedor","proveedor",{unique:false})
+ObjectStoreCompras.createIndex("tipoDocumento","tipoDocumento",{unique:false})
+ObjectStoreCompras.createIndex("NumDocumento","NumDocumento",{unique:false})
+ObjectStoreCompras.createIndex("observacion","observacion",{unique:false})
+ObjectStoreCompras.createIndex("id","id",{unique:true})
+ObjectStoreCompras.createIndex("idArticulo","idArticulo",{unique:true})
+}
 
 console.log("Se crearon las columnnas");
 
@@ -73,26 +201,38 @@ console.log("Se crearon las columnnas");
 export function InsertarEnBasedeDatos(){
 
     let transaction=BaseDatoArticulos.transaction(["Articulos"],"readwrite");
-   
+    const objectStore=transaction.objectStore("Articulos")
+
+    objectStore.add(ArticuloObj)
+
     transaction.oncomplete=(even)=>{
-        console.log("se ha hecho la operacion",even);
-ui.MostrarAlertas("Se ha agregado un nuevo item","succes")
+        swal({
+            title: "Operacion exitosa!",
+            text: "Se ha agregado el Nuevo Articulo!",
+            icon: "success",
+          });
     }
     transaction.onerror = (error)=>{
         console.log("error en la transaccion completada",error);
         //ui.MostrarAlertas(`${error}`,"error")
     
       }
-const objectStore=transaction.objectStore("Articulos")
 
 
-const peticion=objectStore.add(ArticuloObj)
+
+
 
 }
 
 export function InfoArticulo(e){
-    ArticuloObj[e.target.name]=e.target.value
-   
+    ArticuloObj[e.target.name]=e.target.value;
+    
+    const saldoInput= document.querySelector("#Saldo").value;
+    const stockMinimoInput= document.querySelector("#stockminimo").value;
+
+   ArticuloObj.Saldo=Number(saldoInput)
+   ArticuloObj.stockMinimo=Number(stockMinimoInput)
+
     form.forEach((d)=>{
         if(d.value!==""){
            d.classList.remove("Error")
@@ -101,6 +241,7 @@ export function InfoArticulo(e){
 
     })
     console.log("desde infoarticulo",ArticuloObj)
+  
 }
 
 
@@ -110,13 +251,32 @@ export function NuevoArticulo(e){
 
 if(editando){
 
+    const {articulo,stockMinimo,Saldo,unidadMedida,Bodega,categoria}=ArticuloObj
+
+if(articulo==="" || stockMinimo==="" || Saldo==="" || unidadMedida==="" || Bodega==="" || categoria==="" ){
+
+    swal("Todos los campos son obligatorios!", {
+        icon: "warning",
+      })
+
+}else if(isNaN(Saldo) || Saldo<=0 ||isNaN(stockMinimo) || stockMinimo<=0 ){
+    swal("No puedes agregar letras en los campos Stock-minimo y Stock actual,y los valores deben ser mayor a 0", {
+        icon: "warning",
+      })
+
+}
+else{
     let transaction =BaseDatoArticulos.transaction(["Articulos"],"readwrite")
     const objectStore=transaction.objectStore("Articulos")
     objectStore.put(ArticuloObj)
     
     transaction.oncomplete=() => {
        
-    console.log("exito")
+        swal({
+            title: "Operacion exitosa!",
+            text: "Has Editado el Articulo!",
+            icon: "success",
+          });
     }
     transaction.onerror=(e) => {
     
@@ -126,13 +286,34 @@ if(editando){
 items.EditarArticulos()
 
    //ReiniciarObjet()
+
+}
+
+   
 }else{
     ArticuloObj.id=Date.now()
 
-    const {articulo,stockMinimo,Saldo,unidadMedida,Bodega,Observacion}=ArticuloObj
+    const {articulo,stockMinimo,Saldo,unidadMedida,Bodega,categoria}=ArticuloObj
     
-        if(articulo!=="" && stockMinimo!=="" && Saldo!=="" && unidadMedida!=="" && Bodega!=="" && Observacion!=="" ){
-           items.AgregarArticulos({...ArticuloObj})
+        if(articulo==="" || stockMinimo==="" || Saldo==="" || unidadMedida==="" || Bodega==="" || categoria==="" ){
+          
+            ui.MostrarAlertas("todos los campos son Obligatorios","error")
+            form.forEach((d)=>{
+                if(d.value===""){
+                   d.classList.add("Error")
+
+                }
+
+            })
+         
+        }else if(isNaN(Saldo) || Saldo<=0 ||isNaN(stockMinimo) || stockMinimo<=0 ){
+
+            swal("No puedes agregar letras en los campos Stock-minimo y Stock actual,y los valores deben ser mayor a 0", {
+                icon: "warning",
+              })
+        }
+        else{
+            items.AgregarArticulos({...ArticuloObj})
             //items.AgregarArticulos(ArticuloObj)
        
             console.log(items)
@@ -144,15 +325,6 @@ items.EditarArticulos()
 
             })
             ReiniciarObjet()
-        }else{
-            ui.MostrarAlertas("todos los campos son Obligatorios","error")
-            form.forEach((d)=>{
-                if(d.value===""){
-                   d.classList.add("Error")
-
-                }
-
-            })
 
         }
 
@@ -167,8 +339,15 @@ export function ReiniciarObjet(){
     ArticuloObj.Saldo=""
     ArticuloObj.unidadMedida=""
     ArticuloObj.Bodega=""
-    ArticuloObj.Observacion=""
+    ArticuloObj.categoria=""
   
   }
+
+  export function upperCase(e) {
+    var x=document.getElementById(e.target.name).value
+    document.getElementById(e.target.name).value=x.toUpperCase()
+ }
+
+ 
 
   

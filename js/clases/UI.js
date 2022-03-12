@@ -5,6 +5,8 @@ import {BaseDatoArticulos} from "../funciones.js"
 export let iditemEliminar;
 export let iditemEditar;
 
+export let Productos=[];
+
 class UI {
 
     MostrarAlertas(msj,tipo){
@@ -28,115 +30,88 @@ class UI {
 
     InyectarHtml(){
        this.LImpiarTabla()
+let textoBusqueda;
+       //cargar buscador
 
 const ObjectStore=BaseDatoArticulos.transaction("Articulos").objectStore("Articulos")
+
 
 ObjectStore.openCursor().onsuccess = function(e){
 
 const cursor=e.target.result
 
+if(cursor===null){
+console.log("no hay mas registros")
+
+}else{
+  Productos.push(cursor.value);
+
+
+  console.log("🚀 ~ file: UI.js ~ line 45 ~ UI ~ ObjectStore.openCursor ~ Productos", Productos)
+
+}
+const row=document.createElement("tr")
 if(cursor){
-  const {articulo,stockMinimo,Saldo,unidadMedida,Bodega,Observacion,id}=cursor.value
+  
+  Productos.forEach((item)=>{
 
-  const row=document.createElement("tr")
-  row.innerHTML=`<td>${articulo}</td>
-   <td>${stockMinimo}</td>
-  <td>${Saldo}</td>
-  <td>${unidadMedida}</td>
-  <td>${Bodega}</td>
-  <td>${Observacion}</td>
-  `
-  
-  const BtnEditar=document.createElement("button")
-  BtnEditar.classList.add("btn","mr-2","link-danger")
-  BtnEditar.setAttribute("id",id)
-  BtnEditar.innerHTML='Editar'
-  row.appendChild(BtnEditar)
-  
-  const citaa=cursor.value
-  
-  BtnEditar.onclick=(e) =>{
+    const {articulo,stockMinimo,Saldo,unidadMedida,Bodega,categoria,id}=item
     
-  iditemEditar=parseInt(e.target.getAttribute("id"))
-  console.log("🚀 ~ file: UI.js ~ line 59 ~ UI ~ ObjectStore.openCursor ~ iditemEditar", iditemEditar)
-  
-  
-  items.CargarModoEdicion(iditemEditar,citaa)
-  
-  }
-  
-  const Btn=document.createElement("button")
-  Btn.classList.add("btn","mr-2","link-danger")
-  Btn.setAttribute("id",id)
-  Btn.innerHTML='Eliminar'
-  
-  row.appendChild(Btn)
+    row.innerHTML=`<td>${articulo}</td>
+     <td>${stockMinimo}</td>
+    <td>${Saldo}</td>
+    <td>${unidadMedida}</td>
+    <td>${Bodega}</td>
+    <td>${categoria}</td>
+    `
+    
+    const BtnEditar=document.createElement("button")
+    BtnEditar.classList.add("btn","mr-2","link-warning")
+    BtnEditar.setAttribute("id",id)
+    BtnEditar.innerHTML='Editar'
+    row.appendChild(BtnEditar)
+    
+    //const citaa=cursor.value
   
     
- Btn.onclick=(e) =>{
+    BtnEditar.onclick=(e) =>{
+      
+    iditemEditar=parseInt(e.target.getAttribute("id"))
+    console.log("🚀 ~ file: UI.js ~ line 59 ~ UI ~ ObjectStore.openCursor ~ iditemEditar", iditemEditar)
     
-  iditemEliminar=parseInt(e.target.getAttribute("id"))
-  console.log("🚀 ~ file: UI.js ~ line 49 ~ UI ~ obj.forEach ~ iditemEliminar", iditemEliminar)
-  items.EliminarArticulos(iditemEliminar)
+    
+    items.CargarModoEdicion(iditemEditar,Productos)
+    
+    }
+    
+    const Btn=document.createElement("button")
+    Btn.classList.add("btn","mr-2","link-danger")
+    Btn.setAttribute("id",id)
+    Btn.innerHTML='Eliminar <i class="bi bi-file-earmark-x-fill"></i>'
+    
+    row.appendChild(Btn)
+    
+      
+   Btn.onclick=(e) =>{
+      
+    iditemEliminar=parseInt(e.target.getAttribute("id"))
+    console.log("🚀 ~ file: UI.js ~ line 49 ~ UI ~ obj.forEach ~ iditemEliminar", iditemEliminar)
+    items.EliminarArticulos(iditemEliminar)
+    
+    }
+    
   
-  }
+
   
-tabla.appendChild(row)
-cursor.continue()
+  })
+  tabla.appendChild(row)
+
+  cursor.continue()
 }
 
 }
 
-// obj.forEach((ob)=>{
-// const {articulo,stockMinimo,Saldo,unidadMedida,Bodega,Observacion,id}=ob
 
-// const row=document.createElement("tr")
-// row.innerHTML=`<td>${articulo}</td>
-// <td>${stockMinimo}</td>
-// <td>${Saldo}</td>
-// <td>${unidadMedida}</td>
-// <td>${Bodega}</td>
-// <td>${Observacion}</td>
-// `
-
-// const BtnEditar=document.createElement("button")
-// BtnEditar.classList.add("btn","mr-2","link-danger")
-// BtnEditar.setAttribute("id",id)
-// BtnEditar.innerHTML='Editar'
-// row.appendChild(BtnEditar)
-
-// BtnEditar.onclick=(e) =>{
-  
-//   iditemEditar=parseInt(e.target.getAttribute("id"))
-
-
-//   items.CargarModoEdicion(iditemEditar,items)
-
-// }
-
-// const Btn=document.createElement("button")
-// Btn.classList.add("btn","mr-2","link-danger")
-// Btn.setAttribute("id",id)
-// Btn.innerHTML='Eliminar'
-
-// row.appendChild(Btn)
-
-  
-// Btn.onclick=(e) =>{
-  
-//     iditemEliminar=parseInt(e.target.getAttribute("id"))
-//     console.log("🚀 ~ file: UI.js ~ line 49 ~ UI ~ obj.forEach ~ iditemEliminar", iditemEliminar)
-//  items.EliminarArticulos(iditemEliminar)
-
-//   }
-
-// tabla.appendChild(row)
-
-
-
-// })
-
-//cierreeeeee
     }
 
     LImpiarTabla(){

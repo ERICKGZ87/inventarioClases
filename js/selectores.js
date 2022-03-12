@@ -1,7 +1,7 @@
 export const formulario = document.querySelector("#form");
 export const form = document.querySelectorAll("form input");
 export const BotonAgregar = document.querySelector("#boton");
-export const tabla = document.querySelector("tbody");
+export const tabla = document.querySelector("#Articulos tbody");
 
 // inpust
 export const articuloInput= document.querySelector("#articulo");
@@ -9,7 +9,7 @@ export const stockMinimoInput= document.querySelector("#stockminimo");
 export const saldoInput= document.querySelector("#Saldo");
 export const unidadMedidaInput= document.querySelector("#unidadMedida");
 export const BodegaInput= document.querySelector("#Bodega");
-export const ObservacionInput= document.querySelector("#Observacion");
+export const categoriaInput= document.querySelector("#categoria");
 
 //expresiones reg
 export let alfanumerico=/[a-zA-Z_0-9]{1,16}$/
