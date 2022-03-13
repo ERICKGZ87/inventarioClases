@@ -2,11 +2,10 @@ import {items,editando} from "./clases/Producto.js"
 import {ui,iditemEditar,Productos} from "./clases/UI.js"
 import {form,tabla,articuloInput} from "../js/selectores.js"
 
+
 export const buscar= document.querySelector("#buscar")
 
 export let BaseDatoArticulos;
-
-
 
 export const ArticuloObj={
     id:"",
@@ -67,7 +66,7 @@ e.preventDefault()
     if(Saldo<=stockMinimo){
   row.innerHTML=`<td>${articulo}</td>
          <td>${stockMinimo}</td>
-        <td class="msjError"><strong>${Saldo}</strong></td>
+        <td class="msjError"><strong>${Saldo}</strong><img src="/js/img/alert_21476.png" alt="" class="imgError"></td>
         <td>${unidadMedida}</td>
         <td>${Bodega}</td>
         <td>${categoria}</td>
@@ -76,7 +75,7 @@ e.preventDefault()
     }else{
         row.innerHTML=`<td>${articulo}</td>
         <td>${stockMinimo}</td>
-       <td class="msjBien"><strong>${Saldo}</strong></td>
+       <td class="msjBien"><strong>${Saldo}</strong><img src="/js/img/solicit_accept_check_ok_theaction_6340.png" alt=""class="imgSucces"></td>
        <td>${unidadMedida}</td>
        <td>${Bodega}</td>
        <td>${categoria}</td>
@@ -133,7 +132,7 @@ let BaseDatos= window.indexedDB.open("Articulos",1)
 //si hay error
 BaseDatos.onerror=()=>{
 
-    console.log("hubo un error")
+ console.log("hubo un error")
 
 }
 
@@ -141,7 +140,7 @@ BaseDatos.onerror=()=>{
 BaseDatos.onsuccess=(succes)=>{
     console.log("exito se ha creado la base de datos")
 
-    BaseDatoArticulos=BaseDatos.result
+   BaseDatoArticulos=BaseDatos.result
     
   
     ui.InyectarHtml()
@@ -212,10 +211,13 @@ export function InsertarEnBasedeDatos(){
             icon: "success",
           });
     }
-    transaction.onerror = (error)=>{
-        console.log("error en la transaccion completada",error);
-        //ui.MostrarAlertas(`${error}`,"error")
-    
+    transaction.onerror = (e)=>{
+  
+        swal({
+            title: "Alerta!",
+            text: `Ya existe el articulo`,
+            icon: "warning",
+          });
       }
 
 
@@ -226,7 +228,7 @@ export function InsertarEnBasedeDatos(){
 
 export function InfoArticulo(e){
     ArticuloObj[e.target.name]=e.target.value;
-    
+
     const saldoInput= document.querySelector("#Saldo").value;
     const stockMinimoInput= document.querySelector("#stockminimo").value;
 

@@ -1,6 +1,6 @@
 import {formulario,listadoVentas} from "./SelectoresVentas.js"
 import {ArticuloObj,BaseDatoArticulos} from "../js/funciones.js"
-console.log("🚀 ~ file: funcionesVentas.js ~ line 3 ~ BaseDatoArticulos", BaseDatoArticulos)
+
 
 let DB;
 let IdArticulo;
@@ -8,7 +8,7 @@ let EdicionVentas;
 let IdEditar;
 let MontoAnteriorVenta;
 let CantidadDevolverStock;
-
+let data=[]
 
 const ventas={
 articulo:"",
@@ -170,25 +170,49 @@ else{
 const transaction=DB.transaction(["ventas"],"readwrite");
 const ObjectStore=transaction.objectStore("ventas")
 
-ObjectStore.add(ventas)
-//console.log("🚀 ~ file: funcionesVentas.js ~ line 57 ~ IngresarVenta ~ ventas", ventas)
+data.forEach((items)=>{
 
-transaction.onerror=function(e){
-  console.log("ha ocurrido un error",e.target.error)
+  const {id,Saldo,articulo}=items
 
-}
-transaction.oncomplete=function(){
+
+  if(ventas.idarticulo===id){
+
+if(ventas.cantidad>Saldo){
   swal({
-    title: "Operacion exitosa!",
-    text: "Has agregado una venta!",
-    icon: "success",
+    title: "Alerta!",
+    text: `El stock es insuficiente, la cantidad de unidades que tienes de: ${articulo} son : ${Saldo} `,
+    icon: "warning",
   });
-  formulario.reset();
-  ActualizarStockVenta("venta")
-  CargarventasHTML()
 
+}else{
+  ObjectStore.add(ventas)
+  //console.log("🚀 ~ file: funcionesVentas.js ~ line 57 ~ IngresarVenta ~ ventas", ventas)
+  
+  transaction.onerror=function(e){
+    console.log("ha ocurrido un error",e.target.error)
+  
+  }
+  transaction.oncomplete=function(){
+    swal({
+      title: "Operacion exitosa!",
+      text: "Has agregado una venta!",
+      icon: "success",
+    });
+    formulario.reset();
+    ActualizarStockVenta("venta")
+    CargarventasHTML()
+  
+    
+  }
   
 }
+
+
+
+  }
+
+})
+
 console.log(ventas)
 
 
@@ -227,8 +251,8 @@ Productos.onsuccess= function (e) {
 const cursor=e.target.result;
 
 if(cursor){
-
-  const {id,articulo}=cursor.value;
+ 
+  const {articulo,stockMinimo,Saldo,unidadMedida,Bodega,categoria,id}=cursor.value;
 
 const select=document.createElement("option")
 select.setAttribute("value",id);
@@ -238,7 +262,10 @@ select.textContent=articulo;
 SelectProductos.appendChild(select)
 
 cursor.continue()
+data.push(cursor.value)
+console.log("🚀 ~ file: funcionesVentas.js ~ line 294 ~ CargarProductos ~ data", data)
 }
+
 $(document).ready(function() {
   $('.js-example-basic-single').select2();
 });

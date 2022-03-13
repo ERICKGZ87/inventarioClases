@@ -56,15 +56,27 @@ if(cursor){
   Productos.forEach((item)=>{
 
     const {articulo,stockMinimo,Saldo,unidadMedida,Bodega,categoria,id}=item
-    
-    row.innerHTML=`<td>${articulo}</td>
-     <td>${stockMinimo}</td>
-    <td>${Saldo}</td>
-    <td>${unidadMedida}</td>
-    <td>${Bodega}</td>
-    <td>${categoria}</td>
-    `
-    
+
+    if(Saldo<=stockMinimo){
+      row.innerHTML=`<td>${articulo}</td>
+      <td>${stockMinimo}</td>
+     <td class="msjError">${Saldo}<img src="/js/img/alert_21476.png" alt="" class="imgError"></td>
+     <td>${unidadMedida}</td>
+     <td>${Bodega}</td>
+     <td>${categoria}</td>
+     `
+
+    }else{
+      row.innerHTML=`<td>${articulo}</td>
+      <td>${stockMinimo}</td>
+     <td class="msjBien">${Saldo}<img src="/js/img/solicit_accept_check_ok_theaction_6340.png" alt=""class="imgSucces"></td>
+     <td>${unidadMedida}</td>
+     <td>${Bodega}</td>
+     <td>${categoria}</td>
+     `
+      
+    }
+   
     const BtnEditar=document.createElement("button")
     BtnEditar.classList.add("btn","mr-2","link-warning")
     BtnEditar.setAttribute("id",id)

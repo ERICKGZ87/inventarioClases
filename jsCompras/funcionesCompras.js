@@ -233,14 +233,16 @@ const select=document.createElement("option")
 select.setAttribute("value",id);
 select.setAttribute("data-id",articulo);
 
-select.textContent=articulo + " " +`Stock: ${Saldo}`;
-
+select.innerHTML=`${articulo} <strong>${Saldo}</strong>`;
 SelectProductos.appendChild(select)
 
 cursor.continue()
 }
 $(document).ready(function() {
-  $('.js-example-basic-single').select2();
+  $('.js-example-basic-single').select2({
+    placeholder: "Selecciona un articulo",
+    allowClear: true
+  });
 });
 }
 
