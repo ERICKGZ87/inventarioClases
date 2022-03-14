@@ -42,21 +42,18 @@ if(articulos){
             ArticuloObj.Bodega=Bodega
             ArticuloObj.categoria=categoria
             console.log("se llena objeto", ArticuloObj)
-            swal({
-                title: "Has Ingresado al Modo edicion!",
-                icon: "success",
-              });
+          
         editando=true
         const BotonAgregar = document.querySelector("#boton");
         BotonAgregar.textContent="Guardar cambios"
         }
-
+        swal({
+            title: "Has Ingresado al Modo edicion!",
+            icon: "success",
+          });
     })
 
-    
-
-    
-    
+   
 }
     }
     

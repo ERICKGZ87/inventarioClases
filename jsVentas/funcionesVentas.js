@@ -51,8 +51,25 @@ if(EdicionVentas){
   ventas.Observacion=observacionInput
   ventas.id=Number(IdEditar)
   ventas.idarticulo=Number(IdArticulo)
-  //console.log("🚀 ~ file: funcionesVentas.js ~ line 50 ~ IngresarVenta ~ ventas", ventas)
+ 
+  const {articulo,fecha,cantidad,cliente,tipoDocumento,NumDocumento,Observacion}=ventas
 
+if(articulo===""||fecha===""||cantidad===""||cliente===""||tipoDocumento===""||NumDocumento===""||Observacion===""){
+ swal({
+    title: "Atencion!",
+    text: "Todos los campos son obligatorios!",
+    icon: "error",
+  });
+
+}else if(isNaN(cantidad)||cantidad<=0){
+  swal({
+    title: "Atencion!",
+    text: "No puedes agregar letras y numero menores a 0!",
+    icon: "error",
+  });
+
+}
+else{
   ObjectStore.put(ventas)
 
   transaction.onerror=function(){
@@ -61,13 +78,6 @@ if(EdicionVentas){
   }
   transaction.oncomplete=function(){
 
-    swal({
-      title: "Operacion exitosa!",
-      text: "Has Editado un registro !",
-      icon: "success",
-    });
-    
-   ActualizarStockVenta("edicion");
 
     formulario.innerHTML=` <div class="col-md-4">
         
@@ -123,10 +133,25 @@ if(EdicionVentas){
   EdicionVentas=false;
   
   CargarventasHTML()
-  CargarProductos()
- 
+
+
+swal("Atencion","Desea actualizar el stock?","warning",{buttons:["Cancelar","Aceptar"],dangerMode: true})
+.then((value) => {
+    if(value){
+       
+      ActualizarStockVenta("edicion");
+            swal("Se ha actualizado el stock!", {
+                icon: "success",
+              })
+       }  
+
+});
   
   }
+
+}
+
+  
 
 }else{
   const ArticuloInput=document.querySelector("#articulo")
@@ -154,9 +179,13 @@ if(EdicionVentas){
   const{articulo,fecha,cantidad,cliente,tipoDocumento,NumDocumento,observacion}=ventas
 
 if(articulo===""||fecha===""||cantidad===""||cliente===""||tipoDocumento===""||NumDocumento===""||observacion===""){
-  console.log("todos los campos son obligatorios")
-  return;
-}else if(isNaN(cantidad)||cantidad <0){
+  swal({
+    title: "Atencion!",
+    text: "Todos los campos son obligatorios!",
+    icon: "error",
+  });
+  
+}else if(isNaN(cantidad)||cantidad <=0){
 
   swal({
     title: "Atencion!",
@@ -164,7 +193,6 @@ if(articulo===""||fecha===""||cantidad===""||cliente===""||tipoDocumento===""||N
     icon: "error",
   });
 }
-
 else{
 
 const transaction=DB.transaction(["ventas"],"readwrite");
@@ -181,7 +209,7 @@ if(ventas.cantidad>Saldo){
   swal({
     title: "Alerta!",
     text: `El stock es insuficiente, la cantidad de unidades que tienes de: ${articulo} son : ${Saldo} `,
-    icon: "warning",
+    icon: "error",
   });
 
 }else{
@@ -263,11 +291,14 @@ SelectProductos.appendChild(select)
 
 cursor.continue()
 data.push(cursor.value)
-console.log("🚀 ~ file: funcionesVentas.js ~ line 294 ~ CargarProductos ~ data", data)
+//console.log("🚀 ~ file: funcionesVentas.js ~ line 294 ~ CargarProductos ~ data", data)
 }
 
 $(document).ready(function() {
-  $('.js-example-basic-single').select2();
+  $('.js-example-basic-single').select2({
+    placeholder: "Selecciona un articulo",
+    allowClear: true
+  });
 });
 }
 
@@ -301,8 +332,8 @@ while(listadoVentas.firstChild){
   <td>${tipoDocumento}</td>
   <td>${NumDocumento}</td>
   <td>${Observacion}</td>
-  <a href="#" data-id="${id}" data-idProducto="${idarticulo}" data-Cantidad="${cantidad}" style="font-size: 35px;"class="BTNEditar"><i class="bi bi-pencil-square"></i></a>
-  <a href="#" data-id="${id}" data-idProducto="${idarticulo}" data-Cantidad="${cantidad}" style="font-size: 35px;"class="BTNBorrar"><i class="bi bi-file-earmark-x-fill"></i></a>
+  <a href="#" data-id="${id}" data-idProducto="${idarticulo}" data-Cantidad="${cantidad}" style="font-size: 35px;"class="BTNEditar"><img src="/js/img/editnote_pencil_edi_6175.png" alt="" class="imgEditar"></a>
+  <a href="#" data-id="${id}" data-idProducto="${idarticulo}" data-Cantidad="${cantidad}" style="font-size: 35px;"class="BTNBorrar"><img src="/js/img/delete_delete_exit_1577.png" alt="" class="imgEliminar"  style="margin-left:15px;"></a>
   `
   listadoVentas.appendChild(row)
 
@@ -422,7 +453,7 @@ cursor.continue()
 export function EliminarVenta(e){
   e.preventDefault()
 
-if(e.target.classList.contains("bi-file-earmark-x-fill")){
+if(e.target.classList.contains("imgEliminar")){
 
   const IdEliminar=Number(e.target.parentElement.getAttribute("data-id"))
   IdArticulo=Number(e.target.parentElement.getAttribute("data-idProducto"));
@@ -442,13 +473,20 @@ Transaction.onerror= function (){
 
 Transaction.oncomplete= function (){
 
-  swal({
-    title: "Atencion!",
-    text: "Se ha Eliminado el registro!",
-    icon: "success",
+  CargarventasHTML();
+  swal("Atencion","Desea actualizar el stock?","warning",{buttons:["Cancelar","Aceptar"],dangerMode: true})
+  .then((value) => {
+      if(value){
+         
+        ActualizarStockVenta("eliminar");
+              swal("Se ha actualizado el stock!", {
+                  icon: "success",
+                })
+         }  
+  
   });
-ActualizarStockVenta("eliminar")
- CargarventasHTML();
+
+ 
  //const ElementoBorrar=e.target.parentElement.parentElement
 
  
@@ -521,7 +559,7 @@ const TipoDocumento=document.querySelector("#tipoDocumento")
 const NumeroDocumento=document.querySelector("#NumeroDocumento")
  const ObservacionN=document.querySelector("#Observacion")
 
-  if (e.target.classList.contains("bi-pencil-square")) {
+  if (e.target.classList.contains("imgEditar")) {
     IdEditar = e.target.parentElement.getAttribute("data-id");
     IdArticulo=Number(e.target.parentElement.getAttribute("data-idProducto"));
     MontoAnteriorVenta=Number(e.target.parentElement.getAttribute("data-cantidad"))

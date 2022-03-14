@@ -47,7 +47,7 @@ console.log("no hay mas registros")
   Productos.push(cursor.value);
 
 
-  console.log("🚀 ~ file: UI.js ~ line 45 ~ UI ~ ObjectStore.openCursor ~ Productos", Productos)
+  //console.log("🚀 ~ file: UI.js ~ line 45 ~ UI ~ ObjectStore.openCursor ~ Productos", Productos)
 
 }
 const row=document.createElement("tr")
@@ -80,15 +80,15 @@ if(cursor){
     const BtnEditar=document.createElement("button")
     BtnEditar.classList.add("btn","mr-2","link-warning")
     BtnEditar.setAttribute("id",id)
-    BtnEditar.innerHTML='Editar'
+    BtnEditar.innerHTML='<img src="/js/img/editnote_pencil_edi_6175.png" alt="" class="imgError">'
     row.appendChild(BtnEditar)
     
-    //const citaa=cursor.value
+  
   
     
     BtnEditar.onclick=(e) =>{
       
-    iditemEditar=parseInt(e.target.getAttribute("id"))
+    iditemEditar=parseInt(e.target.parentElement.getAttribute("id"))
     console.log("🚀 ~ file: UI.js ~ line 59 ~ UI ~ ObjectStore.openCursor ~ iditemEditar", iditemEditar)
     
     
@@ -99,14 +99,14 @@ if(cursor){
     const Btn=document.createElement("button")
     Btn.classList.add("btn","mr-2","link-danger")
     Btn.setAttribute("id",id)
-    Btn.innerHTML='Eliminar <i class="bi bi-file-earmark-x-fill"></i>'
+    Btn.innerHTML='<img src="/js/img/delete_delete_exit_1577.png" alt="" class="imgError" style="margin-left:15px;">'
     
     row.appendChild(Btn)
     
       
    Btn.onclick=(e) =>{
       
-    iditemEliminar=parseInt(e.target.getAttribute("id"))
+    iditemEliminar=parseInt(e.target.parentElement.getAttribute("id"))
     console.log("🚀 ~ file: UI.js ~ line 49 ~ UI ~ obj.forEach ~ iditemEliminar", iditemEliminar)
     items.EliminarArticulos(iditemEliminar)
     

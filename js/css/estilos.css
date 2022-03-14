@@ -27,7 +27,7 @@
 }
 .imgError{
 
-    float: right
+    float: right;
 }
 
 .imgSucces{
@@ -39,6 +39,13 @@
 
     color: #F4511E;
 }
+
+.footer{
+
+    background-color:blue;
+}
+
+
 
 
 

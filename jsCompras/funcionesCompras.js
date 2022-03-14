@@ -153,8 +153,11 @@ if(EdicionCompras){
   const{articulo,fecha,cantidad,proveedor,tipoDocumento,NumDocumento,observacion}=compras
 
 if(articulo===""||fecha===""||cantidad===""||proveedor===""||tipoDocumento===""||NumDocumento===""||observacion===""){
-  console.log("todos los campos son obligatorios")
-  return;
+  swal({
+    title: "Atencion!",
+    text: "Todos los campos son obligatorios!",
+    icon: "error",
+  });
 }else if(isNaN(cantidad)||cantidad <0){
 
   swal({
@@ -165,7 +168,7 @@ if(articulo===""||fecha===""||cantidad===""||proveedor===""||tipoDocumento===""|
 }
 
 else{
-
+  
 const transaction=DB.transaction(["compras"],"readwrite");
 const ObjectStore=transaction.objectStore("compras")
 
@@ -233,7 +236,7 @@ const select=document.createElement("option")
 select.setAttribute("value",id);
 select.setAttribute("data-id",articulo);
 
-select.innerHTML=`${articulo} <strong>${Saldo}</strong>`;
+select.innerHTML=`${articulo}`;
 SelectProductos.appendChild(select)
 
 cursor.continue()
@@ -276,8 +279,8 @@ while(listadoCompras.firstChild){
   <td>${tipoDocumento}</td>
   <td>${NumDocumento}</td>
   <td>${Observacion}</td>
-  <a href="#" data-id="${id}" data-idProducto="${idarticulo}" data-Cantidad="${cantidad}" style="font-size: 35px;"class="BTNEditar"><i class="bi bi-pencil-square"></i></a>
-  <a href="#" data-id="${id}" data-idProducto="${idarticulo}" data-Cantidad="${cantidad}" style="font-size: 35px;"class="BTNBorrar"><i class="bi bi-file-earmark-x-fill"></i></a>
+  <a href="#" data-id="${id}" data-idProducto="${idarticulo}" data-Cantidad="${cantidad}" style="font-size: 35px;"class="BTNEditar"><img src="/js/img/editnote_pencil_edi_6175.png" alt="" class="imgEditar"></a>
+  <a href="#" data-id="${id}" data-idProducto="${idarticulo}" data-Cantidad="${cantidad}" style="font-size: 35px;"class="BTNBorrar"><img src="/js/img/delete_delete_exit_1577.png" alt="" class="imgEliminar"  style="margin-left:15px;"></a>
   `
   listadoCompras.appendChild(row)
 
@@ -397,7 +400,7 @@ cursor.continue()
 export function EliminarCompra(e){
   e.preventDefault()
 
-if(e.target.classList.contains("bi-file-earmark-x-fill")){
+if(e.target.classList.contains("imgEliminar")){
 
   const IdEliminar=Number(e.target.parentElement.getAttribute("data-id"))
   IdArticulo=Number(e.target.parentElement.getAttribute("data-idProducto"));
@@ -496,7 +499,7 @@ const TipoDocumento=document.querySelector("#tipoDocumento")
 const NumeroDocumento=document.querySelector("#NumeroDocumento")
  const ObservacionN=document.querySelector("#Observacion")
 
-  if (e.target.classList.contains("bi-pencil-square")) {
+  if (e.target.classList.contains("imgEditar")) {
     IdEditar = e.target.parentElement.getAttribute("data-id");
     IdArticulo=Number(e.target.parentElement.getAttribute("data-idProducto"));
     MontoAnteriorCompra=Number(e.target.parentElement.getAttribute("data-cantidad"))
@@ -527,7 +530,6 @@ const NumeroDocumento=document.querySelector("#NumeroDocumento")
 
         swal({
           title: "Has Entrado al Modo Edicion!",
-        
           icon: "success",
         });
     

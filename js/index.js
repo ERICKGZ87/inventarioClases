@@ -14,7 +14,10 @@ function Listener(){
     document.addEventListener("DOMContentLoaded",CrearBaseDeDatos)
     
     $(document).ready(function() {
-        $('.js-example-basic-single').select2();
+        $('.js-example-basic-single').select2({
+            placeholder: "Selecciona un articulo",
+    allowClear: true
+        });
       });
 
    formulario.addEventListener("submit",NuevoArticulo)

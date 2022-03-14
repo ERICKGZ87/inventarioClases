@@ -44,6 +44,7 @@ buscador.appendChild(select)
 cursor.continue()
 
 }
+
 }
 
 
@@ -85,12 +86,12 @@ e.preventDefault()
         const BtnEditar=document.createElement("button")
         BtnEditar.classList.add("btn","mr-2","link-warning")
         BtnEditar.setAttribute("id",id)
-        BtnEditar.innerHTML='Editar'
+        BtnEditar.innerHTML='<img src="/js/img/editnote_pencil_edi_6175.png" alt="" class="imgError">'
         row.appendChild(BtnEditar)
     
         BtnEditar.onclick=(e) =>{
           let iditemEditar2;
-        iditemEditar2=parseInt(e.target.getAttribute("id"))
+        iditemEditar2=parseInt(e.target.parentElement.getAttribute("id"))
         console.log("🚀 ~ file: UI.js ~ line 59 ~ UI ~ ObjectStore.openCursor ~ iditemEditar", iditemEditar2)
         
         
@@ -101,14 +102,14 @@ e.preventDefault()
         const Btn=document.createElement("button")
         Btn.classList.add("btn","mr-2","link-danger")
         Btn.setAttribute("id",id)
-        Btn.innerHTML='Eliminar <i class="bi bi-file-earmark-x-fill"></i>'
+        Btn.innerHTML='<img src="/js/img/delete_delete_exit_1577.png" alt="" class="imgError">'
         
         row.appendChild(Btn)
         
           
        Btn.onclick=(e) =>{
           
-        let iditemEliminar=parseInt(e.target.getAttribute("id"))
+        let iditemEliminar=parseInt(e.target.parentElement.getAttribute("id"))
         console.log("🚀 ~ file: UI.js ~ line 49 ~ UI ~ obj.forEach ~ iditemEliminar", iditemEliminar)
         items.EliminarArticulos(iditemEliminar)
         
@@ -299,14 +300,11 @@ items.EditarArticulos()
     
         if(articulo==="" || stockMinimo==="" || Saldo==="" || unidadMedida==="" || Bodega==="" || categoria==="" ){
           
-            ui.MostrarAlertas("todos los campos son Obligatorios","error")
-            form.forEach((d)=>{
-                if(d.value===""){
-                   d.classList.add("Error")
-
-                }
-
-            })
+            swal({
+                title: "Atencion!",
+                text: "Todos los campos son obligatorios!",
+                icon: "warning",
+              });
          
         }else if(isNaN(Saldo) || Saldo<=0 ||isNaN(stockMinimo) || stockMinimo<=0 ){
 
