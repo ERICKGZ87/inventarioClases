@@ -58,7 +58,7 @@ if(cursor){
     const {articulo,stockMinimo,Saldo,unidadMedida,Bodega,categoria,id}=item
 
     if(Saldo<=stockMinimo){
-      row.innerHTML=`<td>${articulo}</td>
+      row.innerHTML=`<td class="text-danger fw-bold">${articulo}</td>
       <td>${stockMinimo}</td>
      <td class="msjError">${Saldo}<img src="/js/img/alert_21476.png" alt="" class="imgError"></td>
      <td>${unidadMedida}</td>
@@ -67,7 +67,7 @@ if(cursor){
      `
 
     }else{
-      row.innerHTML=`<td>${articulo}</td>
+      row.innerHTML=`<td class="fw-bold">${articulo}</td>
       <td>${stockMinimo}</td>
      <td class="msjBien">${Saldo}<img src="/js/img/solicit_accept_check_ok_theaction_6340.png" alt=""class="imgSucces"></td>
      <td>${unidadMedida}</td>

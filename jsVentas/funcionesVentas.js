@@ -132,10 +132,8 @@ else{
 
   EdicionVentas=false;
   
-  CargarventasHTML()
-
-
-swal("Atencion","Desea actualizar el stock?","warning",{buttons:["Cancelar","Aceptar"],dangerMode: true})
+  
+swal("Se ha editado el registro!","Desea actualizar el stock?","success",{buttons:["Cancelar","Aceptar"],dangerMode: false})
 .then((value) => {
     if(value){
        
@@ -148,11 +146,11 @@ swal("Atencion","Desea actualizar el stock?","warning",{buttons:["Cancelar","Ace
 });
   
   }
-
+  CargarventasHTML()
 }
 
   
-
+//ingreso de nueva venta
 }else{
   const ArticuloInput=document.querySelector("#articulo")
   const FechaInput=document.querySelector("#fecha").value
@@ -474,7 +472,7 @@ Transaction.onerror= function (){
 Transaction.oncomplete= function (){
 
   CargarventasHTML();
-  swal("Atencion","Desea actualizar el stock?","warning",{buttons:["Cancelar","Aceptar"],dangerMode: true})
+  swal("Se ha eliminado el registro!","ahora Desea actualizar el stock?","warning",{buttons:["Cancelar","Aceptar"],dangerMode: true})
   .then((value) => {
       if(value){
          

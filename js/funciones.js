@@ -25,9 +25,9 @@ export function CargarBuscador(){
 const transaction=BaseDatoArticulos.transaction(["Articulos"],"readonly");
 const ObjectStore=transaction.objectStore("Articulos")
 
-const Productos=ObjectStore.openCursor()
+const Productoss=ObjectStore.openCursor()
 
-Productos.onsuccess= function (e) {
+Productoss.onsuccess= function (e) {
 const cursor=e.target.result;
 
 if(cursor){
@@ -40,6 +40,10 @@ select.setAttribute("data-id",articulo);
 select.textContent=articulo;
 
 buscador.appendChild(select)
+
+//cargar cantidad articulos
+const labell=document.querySelector("#label")
+labell.textContent=Productos.length
 
 cursor.continue()
 
@@ -65,7 +69,7 @@ e.preventDefault()
         const row=document.createElement("tr")
 
     if(Saldo<=stockMinimo){
-  row.innerHTML=`<td>${articulo}</td>
+  row.innerHTML=`<td class="text-danger fw-bold">${articulo}</td>
          <td>${stockMinimo}</td>
         <td class="msjError"><strong>${Saldo}</strong><img src="/js/img/alert_21476.png" alt="" class="imgError"></td>
         <td>${unidadMedida}</td>
@@ -144,6 +148,7 @@ BaseDatos.onsuccess=(succes)=>{
    BaseDatoArticulos=BaseDatos.result
     
   
+  
     ui.InyectarHtml()
     
 }
@@ -193,8 +198,6 @@ ObjectStoreCompras.createIndex("idArticulo","idArticulo",{unique:true})
 }
 
 console.log("Se crearon las columnnas");
-
-
 
 }
 

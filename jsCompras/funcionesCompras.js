@@ -66,7 +66,7 @@ if(EdicionCompras){
       icon: "success",
     });
     
-   ActualizarStockCompra("edicion");
+   
 
     formulario.innerHTML=` <div class="col-md-4">
         
@@ -121,12 +121,22 @@ if(EdicionCompras){
 
   EdicionCompras=false;
   
-  CargarComprasHTML()
-  CargarProductos()
- 
   
-  }
+ // CargarProductos()
+ swal("Se ha editado el registro!","Desea actualizar el stock?","success",{buttons:["Cancelar","Aceptar"],dangerMode: true})
+.then((value) => {
+    if(value){
+       
+      ActualizarStockCompra("edicion");
+            swal("Se ha actualizado el stock!", {
+                icon: "success",
+              })
+       }  
 
+});
+CargarComprasHTML()
+  }
+//ingreso nueva compra
 }else{
   const ArticuloInput=document.querySelector("#articulo")
   const FechaInput=document.querySelector("#fecha").value
@@ -420,12 +430,18 @@ Transaction.onerror= function (){
 
 Transaction.oncomplete= function (){
 
-  swal({
-    title: "Atencion!",
-    text: "Se ha Eliminado el registro!",
-    icon: "success",
+  swal("Se ha Eliminado el registro!","ahora Desea actualizar el stock?","warning",{buttons:["Cancelar","Aceptar"],dangerMode: true})
+  .then((value) => {
+      if(value){
+         
+        ActualizarStockCompra("eliminar")
+              swal("Se ha actualizado el stock!", {
+                  icon: "success",
+                })
+         }  
+  
   });
-  ActualizarStockCompra("eliminar")
+  
   CargarComprasHTML();
  //const ElementoBorrar=e.target.parentElement.parentElement
 
