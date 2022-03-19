@@ -1,5 +1,5 @@
 import {conectarDBBase,CargarProductos,IngresarCompra,CargarComprasHTML,EliminarCompra,CargarEdicionCompra} from "./funcionesCompras.js"
-import {formulario,listadoCompras} from "./selectoresCompras.js"
+import {formulario,listadoCompras,BTNproveedor} from "./selectoresCompras.js"
 
 
 
@@ -34,7 +34,11 @@ document.addEventListener('DOMContentLoaded',()=>{
   </div>
   <div class="col-md-2">
     <label for="validationTooltip05" class="form-label">Proveedor</label>
-    <input type="text" class="form-control" id="proveedor" name="proveedor">
+    <input type="text" class="form-control" id="proveedor" name="proveedor"> 
+    
+    
+
+    
     
   </div>
   <div class="col-md-2">
@@ -64,3 +68,9 @@ document.addEventListener('DOMContentLoaded',()=>{
 formulario.addEventListener("submit",IngresarCompra)
 listadoCompras.addEventListener("click",EliminarCompra)
 listadoCompras.addEventListener("click",CargarEdicionCompra)
+if(BTNproveedor){
+  BTNproveedor.addEventListener("click",hola)
+
+  
+
+}

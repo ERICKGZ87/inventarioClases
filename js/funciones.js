@@ -195,6 +195,36 @@ ObjectStoreCompras.createIndex("NumDocumento","NumDocumento",{unique:false})
 ObjectStoreCompras.createIndex("observacion","observacion",{unique:false})
 ObjectStoreCompras.createIndex("id","id",{unique:true})
 ObjectStoreCompras.createIndex("idArticulo","idArticulo",{unique:true})
+
+const ObjectStoreProveedores = base.createObjectStore("proveedores",{keyPath:"id",autoIncrement:true})
+
+ObjectStoreProveedores.createIndex("nombre","nombre",{unique:true})
+ObjectStoreProveedores.createIndex("direccion","direccion",{unique:false})
+ObjectStoreProveedores.createIndex("telefono","telefono",{unique:false})
+ObjectStoreProveedores.createIndex("id","id",{unique:true})
+
+const ObjectStoreClientes = base.createObjectStore("clientes",{keyPath:"id",autoIncrement:true})
+
+ObjectStoreClientes.createIndex("nombre","nombre",{unique:true})
+ObjectStoreClientes.createIndex("direccion","direccion",{unique:false})
+ObjectStoreClientes.createIndex("telefono","telefono",{unique:false})
+ObjectStoreClientes.createIndex("id","id",{unique:true})
+
+
+const ObjectStoreCategorias = base.createObjectStore("categorias",{keyPath:"id",autoIncrement:true})
+
+ObjectStoreCategorias.createIndex("nombre","nombre",{unique:true})
+ObjectStoreCategorias.createIndex("id","id",{unique:true})
+
+const ObjectStoreUnidadMedidas= base.createObjectStore("Unidadmedidas",{keyPath:"id",autoIncrement:true})
+
+ObjectStoreUnidadMedidas.createIndex("nombre","nombre",{unique:true})
+ObjectStoreUnidadMedidas.createIndex("id","id",{unique:true})
+
+const ObjectStoreTipoDocumento= base.createObjectStore("tipoDocumento",{keyPath:"id",autoIncrement:true})
+
+ObjectStoreTipoDocumento.createIndex("nombre","nombre",{unique:true})
+ObjectStoreTipoDocumento.createIndex("id","id",{unique:true})
 }
 
 console.log("Se crearon las columnnas");
