@@ -9,6 +9,7 @@ let IdEditar;
 let MontoAnteriorVenta;
 let CantidadDevolverStock;
 let data=[]
+let ClientesLista=[];
 
 const ventas={
 articulo:"",
@@ -37,7 +38,7 @@ if(EdicionVentas){
   const ArticuloInput=document.querySelector("#articulo").value
   const FechaInput=document.querySelector("#fecha").value
   const CantidadInput=document.querySelector("#cantidad").value
-  const ClienteInput=document.querySelector("#cliente").value
+  const ClienteInput=document.querySelector("#cliente")
   const tipoDocumentoInput=document.querySelector("#tipoDocumento").value
   const NumeroDocumentoInput=document.querySelector("#NumeroDocumento").value
   const observacionInput=document.querySelector("#Observacion").value
@@ -45,7 +46,7 @@ if(EdicionVentas){
   ventas.articulo=ArticuloInput
   ventas.fecha=FechaInput
   ventas.cantidad=Number(CantidadInput)
-  ventas.cliente=ClienteInput
+  ventas.cliente=ClienteInput.options[ClienteInput.selectedIndex].text
   ventas.tipoDocumento=tipoDocumentoInput
   ventas.NumDocumento=NumeroDocumentoInput
   ventas.Observacion=observacionInput
@@ -155,7 +156,7 @@ swal("Se ha editado el registro!","Desea actualizar el stock?","success",{button
   const ArticuloInput=document.querySelector("#articulo")
   const FechaInput=document.querySelector("#fecha").value
   const CantidadInput=document.querySelector("#cantidad").value
-  const ClienteInput=document.querySelector("#cliente").value
+  const ClienteInput=document.querySelector("#cliente")
   const tipoDocumentoInput=document.querySelector("#tipoDocumento").value
   const NumeroDocumentoInput=document.querySelector("#NumeroDocumento").value
   const observacionInput=document.querySelector("#Observacion").value
@@ -167,7 +168,7 @@ swal("Se ha editado el registro!","Desea actualizar el stock?","success",{button
   ventas.articulo=ArticuloInput.options[ArticuloInput.selectedIndex].text
   ventas.fecha=FechaInput
   ventas.cantidad=Number(CantidadInput)
-  ventas.cliente=ClienteInput
+  ventas.cliente=ClienteInput.options[ClienteInput.selectedIndex].text
   ventas.tipoDocumento=tipoDocumentoInput
   ventas.NumDocumento=NumeroDocumentoInput
   ventas.Observacion=observacionInput
@@ -501,55 +502,63 @@ Transaction.oncomplete= function (){
 export function CargarEdicionVenta(e) {
   e.preventDefault();
   console.log(ventas)
- formulario.innerHTML=` <div class="col-md-4">
+
+
+
+
+  if (e.target.classList.contains("imgEditar")) {
+
+    formulario.innerHTML=` <div class="col-md-3">
         
- <label for="validationTooltip04" class="form-label">Articulo</label>
- <input type="text" class="form-control" id="articulo" name="articulo" readonly>
- 
-</div>
+    <label for="validationTooltip04" class="form-label">Articulo</label>
+    <input type="text" class="form-control" id="articulo" name="articulo" readonly>
+    
+   </div>
+   
+   <div class="col-md-2">
+    <label for="validationTooltip02" class="form-label">Fecha</label>
+    <input type="date" europe-countries id="fecha" name="fecha" class="form-control" >
+   
+   </div>
+   
+   <div class="col-md-2">
+    <label for="validationTooltip03" class="form-label">Cantidad</label>
+    <input type="text" class="form-control" id="cantidad" name="cantidad">
+    
+   
+   </div>
+   <div class="col-md-3">
+    <label for="validationTooltip05" class="form-label">Cliente</label>
+    <select class="js-example-basic-single form-control" name="state" id="cliente">
+    <option value=""></option>
+   </select>
+    
+   </div>
+   <div class="col-md-4">
+    <label for="validationTooltip04" class="form-label">Tipo Documento</label>
+    <select class="form-select unidadMedida" id="tipoDocumento" name="tipoDocumento">
+      <option value="Factura">Factura</option>
+      <option value="Boleta">Boleta</option>
+    </select>
+   
+    
+   </div>
+   <div class="col-md-4">
+    <label for="validationTooltip05" class="form-label">N° Documento</label>
+    <input type="text" class="form-control Bodega" id="NumeroDocumento" name="NumeroDocumento">
+    
+   </div>
+   <div class="col-md-4">
+      <label for="validationTooltip05" class="form-label">Observacion</label>
+      <input type="text" class="form-control Observacion" id="Observacion" name="Observacion">
+    
+    </div>
+   <div class="col-12">
+    <button class="btn btn-primary" type="submit" id="boton">Guardar Cambios</button>
+   
+   </div>`
 
-<div class="col-md-3 articulosss">
- <label for="validationTooltip02" class="form-label">Fecha</label>
- <input type="date" europe-countries id="fecha" name="fecha" class="form-control" >
-
-</div>
-
-<div class="col-md-3">
- <label for="validationTooltip03" class="form-label">Cantidad</label>
- <input type="text" class="form-control" id="cantidad" name="cantidad">
- 
-
-</div>
-<div class="col-md-4">
- <label for="validationTooltip05" class="form-label">Cliente</label>
- <input type="text" class="form-control" id="cliente" name="cliente">
- 
-</div>
-<div class="col-md-4">
- <label for="validationTooltip04" class="form-label">Tipo Documento</label>
- <select class="form-select unidadMedida" id="tipoDocumento" name="tipoDocumento">
-   <option value="Factura">Factura</option>
-   <option value="Boleta">Boleta</option>
- </select>
-
- 
-</div>
-<div class="col-md-4">
- <label for="validationTooltip05" class="form-label">N° Documento</label>
- <input type="text" class="form-control Bodega" id="NumeroDocumento" name="NumeroDocumento">
- 
-</div>
-<div class="col-md-4">
-   <label for="validationTooltip05" class="form-label">Observacion</label>
-   <input type="text" class="form-control Observacion" id="Observacion" name="Observacion">
- 
- </div>
-<div class="col-12">
- <button class="btn btn-primary" type="submit" id="boton">Guardar Cambios</button>
-
-</div>`
-
-const Articulo=document.querySelector("#articulo")
+   const Articulo=document.querySelector("#articulo")
 const Fecha=document.querySelector("#fecha")
 const Cantidad=document.querySelector("#cantidad")
 const Cliente=document.querySelector("#cliente")
@@ -557,49 +566,96 @@ const TipoDocumento=document.querySelector("#tipoDocumento")
 const NumeroDocumento=document.querySelector("#NumeroDocumento")
  const ObservacionN=document.querySelector("#Observacion")
 
-  if (e.target.classList.contains("imgEditar")) {
     IdEditar = e.target.parentElement.getAttribute("data-id");
     IdArticulo=Number(e.target.parentElement.getAttribute("data-idProducto"));
     MontoAnteriorVenta=Number(e.target.parentElement.getAttribute("data-cantidad"))
- 
+    const transaction = DB.transaction(["ventas"], "readwrite");
+    const ObjectStore = transaction.objectStore("ventas");
+  
+    ObjectStore.openCursor().onsuccess = function (e) {
+  
+      const cursor = e.target.result;
+    
+      if (cursor) {
+        const {articulo,fecha,cantidad,cliente,tipoDocumento,NumDocumento,Observacion,id,} = cursor.value;
+  
+        if (id === Number(IdEditar)) {
+         
+          //llenar campos
+          
+          Articulo.value=articulo
+          Fecha.value=fecha
+          Cantidad.value=cantidad
+          Cliente.value=cliente
+          TipoDocumento.value=tipoDocumento
+          NumeroDocumento.value=NumDocumento
+          ObservacionN.value=Observacion
+  
+          swal({
+            title: "Has Entrado al Modo Edicion!",
+            icon: "success",
+          });
+          CargarProductos()
+          setTimeout(()=>{
+            LlenarBuscador()
+          },200)
+        }
+        cursor.continue();
+        EdicionVentas=true
+      }
+    
+    };
+  
+  
   }
 
-  const transaction = DB.transaction(["ventas"], "readwrite");
-  const ObjectStore = transaction.objectStore("ventas");
 
-  ObjectStore.openCursor().onsuccess = function (e) {
-
-    const cursor = e.target.result;
   
+
+  
+}
+
+export function CargarClientes() {
+  ClientesLista=[]
+  const Transaction = DB.transaction(["clientes"], "readonly");
+  const ObjectStore = Transaction.objectStore("clientes");
+  ObjectStore.openCursor().onsuccess = function (e) {
+    const cursor = e.target.result;
+
     if (cursor) {
-      const {articulo,fecha,cantidad,cliente,tipoDocumento,NumDocumento,Observacion,id,} = cursor.value;
+      if (cursor === null) {
+        console.log("no hay mas registros");
+      } else {
+      
+          ClientesLista.push(cursor.value);
 
-      if (id === Number(IdEditar)) {
-       
-        //llenar campos
-        
-        Articulo.value=articulo
-        Fecha.value=fecha
-        Cantidad.value=cantidad
-        Cliente.value=cliente
-        TipoDocumento.value=tipoDocumento
-        NumeroDocumento.value=NumDocumento
-        ObservacionN.value=Observacion
-
-        swal({
-          title: "Has Entrado al Modo Edicion!",
-        
-          icon: "success",
-        });
-    
       }
+
       cursor.continue();
-      EdicionVentas=true
+      console.log(ClientesLista);
     }
   };
+  return ClientesLista;
+  
+}
 
+export function LlenarBuscador(){
+  
+  const buscador=document.querySelector("#cliente")
+  ClientesLista.forEach((items)=>{
+
+  const select=document.createElement("option")
+const { nombre,id}=items
+
+select.setAttribute("value",id);
+select.textContent=nombre;
+
+
+buscador.appendChild(select)
+  })
+ 
 
   
 
-  
+
 }

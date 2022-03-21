@@ -1,5 +1,7 @@
-import {conectarDBBase,CargarProductos,IngresarCompra,CargarComprasHTML,EliminarCompra,CargarEdicionCompra} from "./funcionesCompras.js"
+import {conectarDBBase,CargarProductos,IngresarCompra,CargarComprasHTML,EliminarCompra,CargarEdicionCompra,CargarProveedores,LlenarBuscador} from "./funcionesCompras.js"
 import {formulario,listadoCompras,BTNproveedor} from "./selectoresCompras.js"
+
+
 
 
 
@@ -9,7 +11,17 @@ document.addEventListener('DOMContentLoaded',()=>{
     setTimeout(()=>{
         CargarProductos()
         CargarComprasHTML()
-    },500)
+        CargarProveedores()
+        
+
+        
+    },200)
+
+    setTimeout(()=>{
+      LlenarBuscador()
+      
+    },300)
+
     formulario.innerHTML=` <div class="col-md-4">
         
     <label for="validationTooltip04" class="form-label">Buscar Articulo</label>
@@ -26,16 +38,19 @@ document.addEventListener('DOMContentLoaded',()=>{
    
   </div>
 
-  <div class="col-md-2">
+  <div class="col-md-1">
     <label for="validationTooltip03" class="form-label">Cantidad</label>
     <input type="text" class="form-control" id="cantidad" name="cantidad">
     
    
   </div>
-  <div class="col-md-2">
-    <label for="validationTooltip05" class="form-label">Proveedor</label>
-    <input type="text" class="form-control" id="proveedor" name="proveedor"> 
+  <div class="col-md-3">
     
+    
+    <label for="validationTooltip04" class="form-label">Buscar Proveedor</label>
+    <select class="js-example-basic-single form-control" name="state" id="proveedor">
+      <option value=""></option>
+    </select>
     
 
     
@@ -64,6 +79,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     <button class="btn btn-primary" type="submit" id="boton">Nueva Compra</button>
    
   </div>`
+ 
 })
 formulario.addEventListener("submit",IngresarCompra)
 listadoCompras.addEventListener("click",EliminarCompra)

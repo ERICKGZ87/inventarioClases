@@ -103,6 +103,7 @@ export function CargarProveedores() {
   
 }
 
+
 export function CargarProveedoresHTML() {
 
 while(ListaProveedores.firstChild){
@@ -165,8 +166,6 @@ Transaction.oncomplete=function () {
 }
 
 export function LlenarBuscador(){
-
-
 
   ProveedoresLista.forEach((items)=>{
 

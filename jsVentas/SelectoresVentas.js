@@ -9,6 +9,7 @@ export const TipoDocumento=document.querySelector("#tipoDocumento")
 export const NumeroDocumento=document.querySelector("#NumeroDocumento")
 export const ObservacionN=document.querySelector("#Observacion")
 
+
 export const listadoVentas=document.querySelector("#ventas tbody")
 
 export const formulario=document.querySelector("#form")

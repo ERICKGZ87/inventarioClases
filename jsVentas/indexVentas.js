@@ -1,4 +1,4 @@
-import {conectarDBBase,CargarProductos,IngresarVenta,CargarventasHTML,EliminarVenta,CargarEdicionVenta} from "./funcionesVentas.js"
+import {conectarDBBase,CargarProductos,IngresarVenta,CargarventasHTML,EliminarVenta,CargarEdicionVenta,CargarClientes,LlenarBuscador} from "./funcionesVentas.js"
 import {Articulo,formulario,listadoVentas} from "./SelectoresVentas.js"
 
 
@@ -6,10 +6,7 @@ import {Articulo,formulario,listadoVentas} from "./SelectoresVentas.js"
 document.addEventListener('DOMContentLoaded',()=>{
     conectarDBBase()
 
-    setTimeout(()=>{
-        CargarProductos()
-        CargarventasHTML()
-    },500)
+ 
     formulario.innerHTML=` <div class="col-md-3">
         
     <label for="validationTooltip04" class="form-label">Articulo</label>
@@ -34,7 +31,9 @@ document.addEventListener('DOMContentLoaded',()=>{
   </div>
   <div class="col-md-2">
     <label for="validationTooltip05" class="form-label">Cliente</label>
-    <input type="text" class="form-control" id="cliente" name="cliente">
+    <select class="js-example-basic-single form-control" name="state" id="cliente">
+    <option value=""></option>
+  </select>
     
   </div>
   <div class="col-md-2">
@@ -60,6 +59,16 @@ document.addEventListener('DOMContentLoaded',()=>{
     <button class="btn btn-primary" type="submit" id="boton">Nueva venta</button>
    
   </div>`
+  setTimeout(()=>{
+    CargarProductos()
+    CargarClientes()
+    CargarventasHTML()
+    
+},200)
+setTimeout(()=>{
+  LlenarBuscador()
+
+},300)
 })
 formulario.addEventListener("submit",IngresarVenta)
 listadoVentas.addEventListener("click",EliminarVenta)

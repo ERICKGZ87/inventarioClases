@@ -1,12 +1,15 @@
 import {formulario,listadoCompras} from "./selectoresCompras.js"
 import {ArticuloObj} from "../js/funciones.js"
 
+
+
 export let DB;
 let IdArticulo;
 let EdicionCompras;
 let IdEditar;
 let MontoAnteriorCompra;
 let CantidadDevolverStock;
+let ProveedoresLista = [];
 
 
 const compras={
@@ -36,15 +39,17 @@ if(EdicionCompras){
   const ArticuloInput=document.querySelector("#articulo").value
   const FechaInput=document.querySelector("#fecha").value
   const CantidadInput=document.querySelector("#cantidad").value
-  const ProveedorInput=document.querySelector("#proveedor").value
+  const ProveedorInput=document.querySelector("#proveedor")
   const tipoDocumentoInput=document.querySelector("#tipoDocumento").value
   const NumeroDocumentoInput=document.querySelector("#NumeroDocumento").value
   const observacionInput=document.querySelector("#Observacion").value
+ 
+
 
   compras.articulo=ArticuloInput
   compras.fecha=FechaInput
   compras.cantidad=Number(CantidadInput)
-  compras.proveedor=ProveedorInput
+  compras.proveedor=ProveedorInput.options[ProveedorInput.selectedIndex].text
   compras.tipoDocumento=tipoDocumentoInput
   compras.NumDocumento=NumeroDocumentoInput
   compras.Observacion=observacionInput
@@ -52,6 +57,23 @@ if(EdicionCompras){
   compras.idarticulo=Number(IdArticulo)
   //console.log("🚀 ~ file: funcionesVentas.js ~ line 50 ~ IngresarVenta ~ ventas", ventas)
 
+  const{articulo,fecha,cantidad,proveedor,tipoDocumento,NumDocumento,observacion}=compras
+
+if(articulo===""||fecha===""||cantidad===""||proveedor===""||tipoDocumento===""||NumDocumento===""||observacion===""){
+  swal({
+    title: "Atencion!",
+    text: "Todos los campos son obligatorios!",
+    icon: "error",
+  });
+}else if(isNaN(cantidad)||cantidad <0){
+
+  swal({
+    title: "Atencion!",
+    text: "No puede agregar letras,y numero menores a 0",
+    icon: "error",
+  });
+}
+else{
   ObjectStore.put(compras)
 
   transaction.onerror=function(){
@@ -136,12 +158,18 @@ if(EdicionCompras){
 });
 CargarComprasHTML()
   }
+
+
+}
+  
+
+  
 //ingreso nueva compra
 }else{
   const ArticuloInput=document.querySelector("#articulo")
   const FechaInput=document.querySelector("#fecha").value
   const CantidadInput=document.querySelector("#cantidad").value
-  const ProveedorInput=document.querySelector("#proveedor").value
+  const ProveedorInput=document.querySelector("#proveedor")
   const tipoDocumentoInput=document.querySelector("#tipoDocumento").value
   const NumeroDocumentoInput=document.querySelector("#NumeroDocumento").value
   const observacionInput=document.querySelector("#Observacion").value
@@ -153,7 +181,8 @@ CargarComprasHTML()
   compras.articulo=ArticuloInput.options[ArticuloInput.selectedIndex].text
   compras.fecha=FechaInput
   compras.cantidad=Number(CantidadInput)
-  compras.proveedor=ProveedorInput
+  //compras.proveedor=ProveedorInput
+  compras.proveedor=ProveedorInput.options[ProveedorInput.selectedIndex].text
   compras.tipoDocumento=tipoDocumentoInput
   compras.NumDocumento=NumeroDocumentoInput
   compras.Observacion=observacionInput
@@ -176,7 +205,6 @@ if(articulo===""||fecha===""||cantidad===""||proveedor===""||tipoDocumento===""|
     icon: "error",
   });
 }
-
 else{
   
 const transaction=DB.transaction(["compras"],"readwrite");
@@ -220,6 +248,7 @@ export function conectarDBBase() {
     AbrirConexion.onsuccess = function () {
       DB = AbrirConexion.result;
       console.log("Open",DB)
+     
     };
 
   }
@@ -253,10 +282,11 @@ cursor.continue()
 }
 $(document).ready(function() {
   $('.js-example-basic-single').select2({
-    placeholder: "Selecciona un articulo",
+    placeholder: "Selecciona Aqui",
     allowClear: true
   });
 });
+
 }
 
 
@@ -458,8 +488,11 @@ Transaction.oncomplete= function (){
 
 export function CargarEdicionCompra(e) {
   e.preventDefault();
-  console.log(compras)
- formulario.innerHTML=` <div class="col-md-4">
+ 
+ 
+  if (e.target.classList.contains("imgEditar")) {
+
+    formulario.innerHTML=` <div class="col-md-4">
         
  <label for="validationTooltip04" class="form-label">Articulo</label>
  <input type="text" class="form-control" id="articulo" name="articulo" readonly>
@@ -479,8 +512,10 @@ export function CargarEdicionCompra(e) {
 
 </div>
 <div class="col-md-4">
- <label for="validationTooltip05" class="form-label">Proveedor</label>
- <input type="text" class="form-control" id="proveedor" name="proveedor">
+<label for="validationTooltip04" class="form-label">Buscar Proveedor</label>
+<select class="js-example-basic-single form-control" name="state" id="proveedor">
+  <option value=""></option>
+</select>
  
 </div>
 <div class="col-md-4">
@@ -515,48 +550,106 @@ const TipoDocumento=document.querySelector("#tipoDocumento")
 const NumeroDocumento=document.querySelector("#NumeroDocumento")
  const ObservacionN=document.querySelector("#Observacion")
 
-  if (e.target.classList.contains("imgEditar")) {
     IdEditar = e.target.parentElement.getAttribute("data-id");
     IdArticulo=Number(e.target.parentElement.getAttribute("data-idProducto"));
     MontoAnteriorCompra=Number(e.target.parentElement.getAttribute("data-cantidad"))
  
+    const transaction = DB.transaction(["compras"], "readwrite");
+    const ObjectStore = transaction.objectStore("compras");
+  
+    ObjectStore.openCursor().onsuccess = function (e) {
+  
+      const cursor = e.target.result;
+    
+      if (cursor) {
+        const {articulo,fecha,cantidad,proveedor,tipoDocumento,NumDocumento,Observacion,id,} = cursor.value;
+  
+        if (id === Number(IdEditar)) {
+         
+          //llenar campos
+          
+          Articulo.value=articulo
+          Fecha.value=fecha
+          Cantidad.value=cantidad
+          Proveedor.value=proveedor
+          TipoDocumento.value=tipoDocumento
+          NumeroDocumento.value=NumDocumento
+          ObservacionN.value=Observacion
+         
+
+          // swal({
+          //   title: "Has Entrado al Modo Edicion!",
+          //   icon: "success",
+          // });
+          CargarProductos()
+          setTimeout(()=>{
+           
+            LlenarBuscador()
+            
+          },200)
+       
+        }
+        cursor.continue();
+        EdicionCompras=true
+      }
+    };
+  
+    
   }
 
-  const transaction = DB.transaction(["compras"], "readwrite");
-  const ObjectStore = transaction.objectStore("compras");
-
-  ObjectStore.openCursor().onsuccess = function (e) {
-
-    const cursor = e.target.result;
-  
-    if (cursor) {
-      const {articulo,fecha,cantidad,proveedor,tipoDocumento,NumDocumento,Observacion,id,} = cursor.value;
-
-      if (id === Number(IdEditar)) {
-       
-        //llenar campos
-        
-        Articulo.value=articulo
-        Fecha.value=fecha
-        Cantidad.value=cantidad
-        Proveedor.value=proveedor
-        TipoDocumento.value=tipoDocumento
-        NumeroDocumento.value=NumDocumento
-        ObservacionN.value=Observacion
-
-        swal({
-          title: "Has Entrado al Modo Edicion!",
-          icon: "success",
-        });
-    
-      }
-      cursor.continue();
-      EdicionCompras=true
-    }
-  };
-
+ 
 
   
 
   
 }
+
+export function CargarProveedores() {
+  ProveedoresLista=[]
+  const Transaction = DB.transaction(["proveedores"], "readonly");
+  const ObjectStore = Transaction.objectStore("proveedores");
+  ObjectStore.openCursor().onsuccess = function (e) {
+    const cursor = e.target.result;
+
+    if (cursor) {
+      if (cursor === null) {
+        console.log("no hay mas registros");
+      } else {
+      
+        ProveedoresLista.push(cursor.value);
+
+      }
+
+      cursor.continue();
+      console.log(ProveedoresLista);
+    }
+  };
+  return ProveedoresLista;
+  
+}
+
+export function LlenarBuscador(){
+
+  ProveedoresLista.forEach((items)=>{
+
+  const select=document.createElement("option")
+const { nombre,id}=items
+
+select.setAttribute("value",id);
+select.textContent=nombre;
+
+const buscador=document.querySelector("#proveedor")
+
+buscador.appendChild(select)
+
+
+  })
+ 
+
+ 
+
+
+}
+
+
+
